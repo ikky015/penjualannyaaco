@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Keuntungan</title>
+    <title>Aco Store</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -52,7 +52,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>Kalkulator Keuntungan</h2>
+        <h2><center>Aco Ardi Wiranata Store</center></h2>
         <div id="items" class="item-container">
             <div class="item">
                 <label>Nama Barang:</label>
@@ -92,7 +92,6 @@
             let items = document.querySelectorAll(".item");
             let totalBayar = 0;
             let totalLaba = 0;
-            let totalItemDiskon = 0;
             let hasilText = "";
             
             items.forEach(item => {
@@ -105,21 +104,18 @@
                 let subTotalLaba = (hargaJual - hargaModal) * jumlahTerjual;
                 let statusLaba = subTotalLaba >= 0 ? "Untung" : "Rugi";
                 
+                if (hargaJual === 35000) {
+                    let paketDiskon = Math.floor(jumlahTerjual / 3);
+                    let sisaItem = jumlahTerjual % 3;
+                    subTotalBayar = (paketDiskon * 100000) + (sisaItem * 35000);
+                    subTotalLaba = ((paketDiskon * 100000) - (paketDiskon * 3 * hargaModal)) + ((sisaItem * hargaJual) - (sisaItem * hargaModal));
+                }
+                
                 totalBayar += subTotalBayar;
                 totalLaba += subTotalLaba;
                 
-                if (hargaJual === 35000) {
-                    totalItemDiskon += jumlahTerjual;
-                }
-                
                 hasilText += `Barang: ${namaBarang} <br>Total Harga: Rp ${subTotalBayar.toLocaleString()} <br>Laba: Rp ${subTotalLaba.toLocaleString()} (${statusLaba})<br><br>`;
             });
-            
-            if (totalItemDiskon >= 3) {
-                let paketDiskon = Math.floor(totalItemDiskon / 3);
-                let sisaItem = totalItemDiskon % 3;
-                totalBayar = (totalBayar - (totalItemDiskon * 35000)) + (paketDiskon * 100000) + (sisaItem * 35000);
-            }
             
             let statusTotalLaba = totalLaba >= 0 ? "Untung" : "Rugi";
             hasilText += `<strong>Total Keseluruhan:</strong> <br>Total Harga: Rp ${totalBayar.toLocaleString()} <br>Total Laba: Rp ${totalLaba.toLocaleString()} (${statusTotalLaba})`;
