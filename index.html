@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Keuntungan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px gray;
+            max-width: 500px;
+            margin: auto;
+        }
+        .item-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .item {
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        label, input {
+            display: block;
+            width: 100%;
+            margin-bottom: 5px;
+            padding: 8px;
+            font-size: 16px;
+        }
+        button {
+            background: blue;
+            color: white;
+            padding: 12px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 16px;
+            width: 100%;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Kalkulator Keuntungan</h2>
+        <div id="items" class="item-container">
+            <div class="item">
+                <label>Nama Barang:</label>
+                <input type="text" class="namaBarang">
+                <label>Harga Modal:</label>
+                <input type="number" class="hargaModal">
+                <label>Harga Jual:</label>
+                <input type="number" class="hargaJual">
+                <label>Jumlah Terjual:</label>
+                <input type="number" class="jumlahTerjual">
+            </div>
+        </div>
+        <button onclick="tambahItem()">Tambah Item</button>
+        <button onclick="hitungKeuntungan()">Hitung</button>
+        <h3 id="hasil"></h3>
+    </div>
+
+    <script>
+        function tambahItem() {
+            let container = document.getElementById("items");
+            let itemDiv = document.createElement("div");
+            itemDiv.classList.add("item");
+            itemDiv.innerHTML = `
+                <label>Nama Barang:</label>
+                <input type="text" class="namaBarang">
+                <label>Harga Modal:</label>
+                <input type="number" class="hargaModal">
+                <label>Harga Jual:</label>
+                <input type="number" class="hargaJual">
+                <label>Jumlah Terjual:</label>
+                <input type="number" class="jumlahTerjual">
+            `;
+            container.appendChild(itemDiv);
+        }
+
+        function hitungKeuntungan() {
+            let items = document.querySelectorAll(".item");
+            let totalBayar = 0;
+            let totalLaba = 0;
+            let totalItemDiskon = 0;
+            let hasilText = "";
+            
+            items.forEach(item => {
+                let namaBarang = item.querySelector(".namaBarang").value;
+                let hargaModal = parseFloat(item.querySelector(".hargaModal").value);
+                let hargaJual = parseFloat(item.querySelector(".hargaJual").value);
+                let jumlahTerjual = parseInt(item.querySelector(".jumlahTerjual").value);
+                
+                let subTotalBayar = hargaJual * jumlahTerjual;
+                let subTotalLaba = (hargaJual - hargaModal) * jumlahTerjual;
+                let statusLaba = subTotalLaba >= 0 ? "Untung" : "Rugi";
+                
+                totalBayar += subTotalBayar;
+                totalLaba += subTotalLaba;
+                
+                if (hargaJual === 35000) {
+                    totalItemDiskon += jumlahTerjual;
+                }
+                
+                hasilText += `Barang: ${namaBarang} <br>Total Harga: Rp ${subTotalBayar.toLocaleString()} <br>Laba: Rp ${subTotalLaba.toLocaleString()} (${statusLaba})<br><br>`;
+            });
+            
+            if (totalItemDiskon >= 3) {
+                let paketDiskon = Math.floor(totalItemDiskon / 3);
+                let sisaItem = totalItemDiskon % 3;
+                totalBayar = (totalBayar - (totalItemDiskon * 35000)) + (paketDiskon * 100000) + (sisaItem * 35000);
+            }
+            
+            let statusTotalLaba = totalLaba >= 0 ? "Untung" : "Rugi";
+            hasilText += `<strong>Total Keseluruhan:</strong> <br>Total Harga: Rp ${totalBayar.toLocaleString()} <br>Total Laba: Rp ${totalLaba.toLocaleString()} (${statusTotalLaba})`;
+            document.getElementById("hasil").innerHTML = hasilText;
+        }
+    </script>
+</body>
+</html>
